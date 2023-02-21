@@ -47,10 +47,18 @@ func (s *APIServer) configureLogger() error {
 
 func (s *APIServer) ConfigureRouter() {
 	s.router.HandleFunc("/hello", s.HandleHello())
+	s.router.HandleFunc("/ping", s.HandlePing())
+
 }
 
 func (s *APIServer) HandleHello() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "Hello")
+	}
+}
+
+func (s *APIServer) HandlePing() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "Pong")
 	}
 }

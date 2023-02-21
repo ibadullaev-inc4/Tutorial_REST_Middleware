@@ -15,3 +15,11 @@ func TestAPIServer_HandleHello(t *testing.T) {
 	s.HandleHello().ServeHTTP(rec, req)
 	assert.Equal(t, rec.Body.String(), "Hello")
 }
+
+func TestAPIServer_HandlePing(t *testing.T) {
+	s := New(NewConfig())
+	rec := httptest.NewRecorder()
+	req, _ := http.NewRequest(http.MethodGet, "/ping", nil)
+	s.HandlePing().ServeHTTP(rec, req)
+	assert.Equal(t, rec.Body.String(), "Pong")
+}
