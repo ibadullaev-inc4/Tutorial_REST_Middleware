@@ -1,6 +1,9 @@
 package apiserver
 
 import (
+	"io"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -26,8 +29,11 @@ func (s *APIServer) Start() error {
 	if err := s.configureLogger(); err != nil {
 		return err
 	}
+
+	s.ConfigureRouter()
+
 	s.logger.Info("starting api server")
-	return nil
+	return http.ListenAndServe(s.config.BindAddr, s.router)
 }
 
 func (s *APIServer) configureLogger() error {
@@ -37,4 +43,14 @@ func (s *APIServer) configureLogger() error {
 	}
 	s.logger.SetLevel(level)
 	return nil
+}
+
+func (s *APIServer) ConfigureRouter() {
+	s.router.HandleFunc("/hello", s.HandleHello())
+}
+
+func (s *APIServer) HandleHello() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "Hello")
+	}
 }
